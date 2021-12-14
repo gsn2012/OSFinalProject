@@ -1,7 +1,8 @@
 # Introduction
 This is the final project for the Intro to OS class. 
 
-<br>AIM : The project is centered around performance.
+---
+AIM : The project is centered around performance.
 We will try to get disk I/O as fast as possible and evaluate the effects of caches and the cost of system calls. In the end we will try to optimize our program so that it can efficiently read a file using multithreading and other optimization techniques.
 
 
@@ -26,7 +27,7 @@ After compiling all the files we can now test them. We have the following files 
 ```
 
 ### Measurement
-==NOTE== : 
+<mark>NOTE</mark> : 
 1. To measure the cached readings set the cached_flag to 1
 2. To measure the non-cached readings set the cached_flag to 0
 ```

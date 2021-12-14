@@ -1,7 +1,6 @@
 # Introduction
 This is the final project for the Intro to OS class. 
 
----
 AIM : The project is centered around performance.
 We will try to get disk I/O as fast as possible and evaluate the effects of caches and the cost of system calls. In the end we will try to optimize our program so that it can efficiently read a file using multithreading and other optimization techniques.
 

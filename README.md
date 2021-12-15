@@ -15,8 +15,8 @@ Use make to compile all the files.
 After compiling all the files we can now test them. We have the following files which can be tested:
 
 1. run  
-2. measurement
-3. final_measurement
+2. run2
+3. final_performance
 4. fast
 
 

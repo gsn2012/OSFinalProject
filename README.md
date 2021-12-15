@@ -7,7 +7,7 @@ We will try to get disk I/O as fast as possible and evaluate the effects of cach
 
 ## Compilation 
 
-Use make to compile all the files.
+Use build to compile all the files.
 
 ```
 ./build

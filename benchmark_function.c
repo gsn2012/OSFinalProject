@@ -10,7 +10,7 @@ double now()
 unsigned int xorbuf(unsigned int *buffer, int size) 
 {
 	unsigned int result = 0;
-	for (int i = 0; i < size/4; i++) 
+	for (int i = 0; i < size; i++) 
 	{
 		result ^= buffer[i];
 	}
@@ -27,21 +27,20 @@ unsigned int read_file(char* filename, int fd, unsigned int *buffer, long long i
 	buffer = (unsigned int*)malloc(block_size);
 	int n;
 	long long int size = 0;
-	unsigned int xor = 0;
+	unsigned int xor2 = 0;
 
 	while(block_count--)
 	{
 		if((n = read(fd, buffer, block_size)) > 0)
 		{
-			xor ^= xorbuf(buffer, n);
+			xor2 ^= xorbuf(buffer, n/4);
 		}
 	}
-	free(buffer);
 	close(fd);
-	return xor;
+	return xor2;
 }
-
-unsigned int measure_lseek(char* filename, long long int block_count)
+// yadedddaa
+unsigned int measure_lseek(char* filename, long long int block_size, long long int block_count)
 {
 	int fd;
 	int syscalls = 0;
@@ -52,7 +51,7 @@ unsigned int measure_lseek(char* filename, long long int block_count)
 	}
 	int n;
 	long long int size = 0;
-	unsigned int xor = 0;
+	unsigned int xor2 = 0;
 
 	while(block_count--)
 	{
@@ -62,7 +61,7 @@ unsigned int measure_lseek(char* filename, long long int block_count)
 	close(fd);
 	return syscalls;
 }
-unsigned int measure_uid(long long int block_count)
+unsigned int measure_pid(long long int block_count)
 {
 
 	int n;
@@ -77,7 +76,7 @@ unsigned int measure_uid(long long int block_count)
 	}
 	return syscalls;
 }
-
+/*
 void write_file(char* filename, int fd, unsigned int *buffer, long long int block_size, long long int block_count)
 {
 	if((fd = open(filename, O_CREAT|O_WRONLY, 0666)) < 0)
@@ -102,25 +101,26 @@ void write_file(char* filename, int fd, unsigned int *buffer, long long int bloc
 		}
 	}
 	printf("Size: %lld\n", size);
-	free(buffer);
 	close(fd);
 }
+*/
 
 long long int measure_srch(char* filename, int fd, unsigned int* buffer, long long int block_size, long long int max_count, int cached)
 {
 	double start_time, end_time;
-	unsigned int xor = 0;
+	unsigned int xor2 = 0;
 	long long int count = 1;
 
 	while(count <= max_count)
 	{
 		if(cached == 0)
 		{
-			int rand = system("sudo sh -c \"/usr/bin/echo 3 > /proc/sys/vm/drop_caches\"");
+			system("sudo sh -c \"/usr/bin/echo 3 > /proc/sys/vm/drop_caches\" >/dev/null 2>&1");
 		}
 		start_time = now();
-		xor = read_file(filename, fd, buffer, block_size, count);
+		xor2 = read_file(filename, fd, buffer, block_size, count);
 		end_time = now();
+		printf("Count: %lld File Size: %lld Time: %f \n", count, block_size*count, (end_time-start_time));
 		if((end_time-start_time) >= 5.0)
 		{
 			printf("[FINAL]Block_count: %lld Filesize: %lld bytes Time: %f seconds \n\n", count, (block_size*count), (end_time-start_time));
@@ -135,7 +135,7 @@ long long int measure_srch(char* filename, int fd, unsigned int* buffer, long lo
 long long int measure_binsrch(char* filename, int fd, unsigned int* buffer, long long int block_size, long long int start, long long int end, int cached)
 {
 	double start_time, end_time;
-	unsigned int xor = 0;
+	unsigned int xor2 = 0;
 	long long int mid = -1;
 	
 	while(start < end)
@@ -144,16 +144,16 @@ long long int measure_binsrch(char* filename, int fd, unsigned int* buffer, long
 		
 		if(cached == 0)
 		{
-			int rand = system("sudo sh -c \"/usr/bin/echo 3 > /proc/sys/vm/drop_caches\"");
+			system("sudo sh -c \"/usr/bin/echo 3 > /proc/sys/vm/drop_caches\" >/dev/null 2>&1");
 		}
 		start_time = now();
-		xor = read_file(filename, fd, buffer, block_size, mid);
+		xor2 = read_file(filename, fd, buffer, block_size, mid);
 		end_time = now();
-		if((end_time-start_time) < 3.0)
+		if((end_time-start_time) < 5.0)
 		{
 			start = mid + 1;
 		}
-		else if((end_time-start_time) >= 3.0 && (end_time-start_time) <= 15.0)
+		else if((end_time-start_time) >= 5.0 && (end_time-start_time) <= 15.0)
 		{
 			printf("[FINAL]Block_count: %lld Filesize: %lld bytes Time: %f seconds \n\n", mid, (block_size*mid), (end_time-start_time));
 			return mid;
@@ -169,20 +169,21 @@ long long int measure_binsrch(char* filename, int fd, unsigned int* buffer, long
 double performance(char* filename, int fd, unsigned int* buffer, long long int block_size, long long int block_count, int cached)
 {
 	double start_time, end_time;
-	unsigned int xor = 0;
+	unsigned int xor2 = 0;
 	double time = 0;
 
 	for(int i = 0 ; i < 5 ; i++)
 	{
 		if(cached == 0)
 		{
-			int rand = system("sudo sh -c \"/usr/bin/echo 3 > /proc/sys/vm/drop_caches\"");
+			system("sudo sh -c \"/usr/bin/echo 3 > /proc/sys/vm/drop_caches\" >/dev/null 2>&1");
 		}
 		start_time = now();
-		xor = read_file(filename, fd, buffer, block_size, block_count);
+		xor2 = read_file(filename, fd, buffer, block_size, block_count);
 		end_time = now();
 		time += (end_time-start_time); 
 	}
 
 	return time/5.0;
 }
+

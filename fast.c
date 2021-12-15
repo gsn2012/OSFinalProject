@@ -2,13 +2,11 @@
 #include <pthread.h>
 
 #define NUM_THREADS 128
-
 char* filename;
 long long int file_size = 0;
-long long int block_size = 1048576;
+long long int block_size = 131072;
 unsigned int xor_values[NUM_THREADS];
 
-//void read_from_file(long long int id, long long int index)
 void read_from_file(long long int id, long long int count)
 {
 	int fd;
@@ -21,7 +19,6 @@ void read_from_file(long long int id, long long int count)
 	buffer = (unsigned int*)malloc(block_size);
 	long long int n;
 	long long int index = id*count*block_size;
-	//printf("Index: %lld\n", index);
 
 	while(count--)
 	{
@@ -34,7 +31,6 @@ void read_from_file(long long int id, long long int count)
 			break;
 		}
 		index+=n;
-		//printf("Next index: %lld\n", index);
 	}
 	close(fd);
 }
@@ -45,15 +41,7 @@ void* read_phase(void* arg)
 	long long int id = (long long int)arg;
 	long long int i;
 	long long int count = file_size/(NUM_THREADS*block_size)+1;
-	//printf("id: %lld Count: %lld\n", id, count);
-	//printf("Thread no. %lld\n", id);
-	
-	//for(i = id*block_size; i < file_size; i+=(NUM_THREADS*block_size))
-	//{
-		//printf("ID: %lld index: %lld\n", id, i);
-		//read_from_file(id, i);
-		read_from_file(id, count);
-	//}
+	read_from_file(id, count);
 	pthread_exit(NULL);	
 }
 

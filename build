@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+  
+
+    echo "gcc functions.c -o run"
+    gcc run.c functions.c -w -o run
+    echo "gcc run2.c functions.c -o run2"
+    gcc run2.c functions.c -w -o run2
+    echo "gcc final_performance.c functions.c -o final_performance"
+    gcc final_performance.c functions.c -w -o final_performance
+    echo "gcc syscall.c functions.c -o syscall"
+    gcc syscall.c functions.c -w -o syscall
+    echo "gcc -O3 -pthread  fast.c functions.c -o fast"
+    gcc -O3 -pthread fast.c functions.c -w -o fast

@@ -31,6 +31,9 @@ int main(int argc, char *argv[])
 	block_count = measure_binsrch(filename, fd, buffer, block_size, 1 , file_size/block_size, cached);
 	
 	printf("Block Count: %lld\n", block_count);
-
+	if(block_count == -1)
+	{
+		printf("File size is too small to run for reasonable time. Please increase file size.\n");
+	}
 	return 0;
 }

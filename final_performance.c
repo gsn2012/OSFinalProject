@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
 	stat(filename, &st);
 	file_size = st.st_size;
 	printf("File size is %lld\n", file_size);
+	
 
 	while(block_size <= block_size_capacity)
 	{
@@ -45,32 +46,16 @@ int main(int argc, char *argv[])
 
 		mib_size = (block_size*block_count)/MIB;
 		mb_size = (block_size*block_count)/MB;
-	 	int file_exists = 0;	
-
+		
 		if(cached == 0)
 		{
-			if(access("/root/os/Results_uncached.csv", F_OK) != -1) 
-			{
-				file_exists = 1;
-			} 
-			fds = fopen("/root/os/Results_uncached.csv", "a+");
-			if(file_exists == 0)
-			{
-				fprintf(fds, "Block Size,Block Count,File Size,Avg. Time,MiB/s,MB/s\n");
-			}
+			fds = fopen("/root/os/Results_uncached.csv", "a+");	
 		}
 		else
 		{
-			if(access("/root/os/Results_cached.csv", F_OK) != -1) 
-			{
-				file_exists = 1;
-			} 
 			fds = fopen("/root/os/Results_cached.csv", "a+");	
-			if(file_exists == 0)
-			{
-				fprintf(fds, "Block Size,Block Count,File Size,Avg. Time,MiB/s,MB/s\n");
-			}
 		}
+
 		if(fds == NULL)
 		{
 			printf("[ERROR]Cannot not open file fds!!\n");

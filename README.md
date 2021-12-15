@@ -44,7 +44,7 @@ Makes a csv file in which all the reading are captured for block size starting f
 ### System call
 
 ```
-./syscall <filename> <no_of_itartions>
+./syscall <filename> <no_of_itertions>
 ```
 
 ### Final Raw performance
